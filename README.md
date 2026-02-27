@@ -1,1 +1,88 @@
-# Music-Clustering-Transformer
+# Music Clustering Transformer
+
+A deep learning project designed to cluster music audio using a hierarchical CNN-Transformer architecture. This project processes raw audio files, extracts high-level features through a convolutional backbone, and captures long-term temporal dependencies via a Transformer to generate meaningful music embeddings.
+
+---
+
+## Project Overview
+
+The repository consists of two primary components:
+* Thesis_final.ipynb: The core research notebook where the model architecture is defined, trained, and used to generate audio embeddings.
+* song_bord.py: A Streamlit-based interactive dashboard that visualizes the resulting embeddings in an interactive space.
+
+---
+
+## Architecture: Clips vs. Segments
+
+The model processes audio in a bottom-up hierarchy to handle long-form audio files efficiently.
+
+### 1. Hierarchical Processing
+* The Song: The full, variable-length audio file.
+* The Clip (Intermediate): Large 30s blocks used for easier data loading and memory management.
+* The Segment (Atomic Unit): Small 3.75s chunks. This is the specific resolution processed by the CNN.
+
+### 2. Constants and Reference Table
+
+| Term | Duration | Samples | Role |
+| :--- | :--- | :--- | :--- |
+| Sample Rate | N/A | 8000 Hz | The speed of the audio (low fidelity). |
+| Clip | 30.00 sec | 240,000 | The code chops the song into these first for memory handling. |
+| Segment | 3.75 sec | 30,000 | Model Input: The CNN processes these independently. |
+| Sequence | ~6.25 min | 100 Segments | Transformer Context: The Transformer sees a sequence of 100 segments. |
+
+---
+
+## Data Flow and Tensor Shapes
+
+The data moves through the pipeline following these specific transformations:
+
+1. Input (Dataset):
+   The dataset forces every song to be exactly 100 segments long, using padding or cutting as necessary.
+   - Shape: (Batch_Size, 100, 1, 30000)
+
+2. Step 1: Flattening (Before CNN):
+   The model merges the Batch and Segment dimensions so the CNN processes every segment individually.
+   - Shape: (Batch_Size * 100, 1, 30000)
+
+3. Step 2: Feature Extraction (CNN Output):
+   The CNN turns the 30,000 raw samples into a dense 1024-dimensional feature vector.
+   - Shape: (Batch_Size * 100, 1024)
+
+4. Step 3: Contextualization (Transformer Input):
+   The code un-flattens the data. The Transformer now sees a sequence of 100 feature vectors.
+   - Shape: (Batch_Size, 100, 1024)
+
+---
+
+## Memory Usage and Constraints
+
+Because N_SEGMENTS is 100, a single item in your batch requires the CNN to run 100 times.
+* Calculation: Batch Size 32 * 100 Segments = 3,200 forward passes per training step.
+* Risk: High probability of CUDA Out of Memory (OOM) errors on consumer-grade GPUs.
+* Fix: If the script crashes, lower N_SEGMENTS (e.g., to 50) or reduce the Batch Size.
+
+---
+
+## Requirements and Installation
+
+Based on the project files, the following dependencies are required:
+
+### Dependencies
+* Deep Learning: torch, torchaudio
+* Audio Analysis: librosa
+* Data Processing: numpy, pandas, scikit-learn
+* Visualization: streamlit, plotly, matplotlib
+* Utilities: tqdm
+
+### Setup command:
+pip install torch torchaudio librosa streamlit plotly pandas numpy scikit-learn matplotlib tqdm
+
+---
+
+## Usage
+
+### 1. Model Training and Embedding Generation
+Use the Jupyter Notebook to process your dataset and train the CNN-Transformer model via the command: jupyter notebook Thesis_final.ipynb.
+
+### 2. Interactive Song Board
+The song_bord.py script uses t-SNE to project the high-dimensional embeddings into an interactive 3D space. It includes features to view metadata and play audio samples directly from the dashboard. Launch it using: streamlit run song_bord.py.
