@@ -108,7 +108,11 @@ jupyter notebook Thesis_final.ipynb.
 ```
 
 ### 2. Interactive Song Board
-The song_bord.py script uses t-SNE to project the high-dimensional embeddings into an interactive 3D space. It includes features to view metadata and play audio samples directly from the dashboard. Launch it using:
+The song_bord.py script uses t-SNE to project the high-dimensional embeddings into an interactive 3D space. It includes features to view metadata and play audio samples directly from the dashboard. To avoid licensing issues with public hosting, this is designed to run locally.
+
+1. Ensure your audio files are in the `/songs` directory.
+2. Run the generation script:
+```bash
+   python song_board.py
 ```
-streamlit run song_bord.py.
-```
+3. Open the resulting interactive_song_board.html in any web browser to explore the clusters.
