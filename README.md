@@ -1,5 +1,7 @@
 # Music Clustering Transformer
 
+This thesis project was developed as part of the final project for the **Applied Data Science** course at **Utrecht University**.
+
 A deep learning project designed to cluster music audio using a hierarchical CNN-Transformer architecture. This project processes raw audio files, extracts high-level features through a convolutional backbone, and captures long-term temporal dependencies via a Transformer to generate meaningful music embeddings.
 
 ---
