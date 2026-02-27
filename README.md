@@ -75,14 +75,21 @@ Based on the project files, the following dependencies are required:
 * Utilities: tqdm
 
 ### Setup command:
+```
 pip install torch torchaudio librosa streamlit plotly pandas numpy scikit-learn matplotlib tqdm
-
+```
 ---
 
 ## Usage
 
 ### 1. Model Training and Embedding Generation
-Use the Jupyter Notebook to process your dataset and train the CNN-Transformer model via the command: jupyter notebook Thesis_final.ipynb.
+Use the Jupyter Notebook to process your dataset and train the CNN-Transformer model via the command:
+```
+jupyter notebook Thesis_final.ipynb.
+```
 
 ### 2. Interactive Song Board
-The song_bord.py script uses t-SNE to project the high-dimensional embeddings into an interactive 3D space. It includes features to view metadata and play audio samples directly from the dashboard. Launch it using: streamlit run song_bord.py.
+The song_bord.py script uses t-SNE to project the high-dimensional embeddings into an interactive 3D space. It includes features to view metadata and play audio samples directly from the dashboard. Launch it using:
+```
+streamlit run song_bord.py.
+```
